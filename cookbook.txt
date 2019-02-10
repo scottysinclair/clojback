@@ -1,0 +1,43 @@
+clojure general
+
+def - evaluated once on script load
+defn -evaluated each time it is called
+
+
+#list - linked list
+(1,2,3)
+
+#vector - array, preallocated
+[1,2,3]
+
+
+
+clojure pedestal
+
+#start the REPL
+lein repl
+
+#start the http server
+(def serv (run-dev))
+
+http://localhost:8080/about
+
+#reload a namespace in the REPL
+(use 'clojback.service :reload)
+
+
+#lacina graphql parsing SDL file
+https://lacinia.readthedocs.io/en/latest/schema/parsing.html
+
+#lacia example
+https://github.com/hlship/boardgamegeek-graphql-proxy/tree/master/src/bgg_graphql_proxy
+
+
+
+clojure Java
+
+#import a class
+(import 'hello.Hello)
+
+#call static method
+(ClassName/methodName arguments)
