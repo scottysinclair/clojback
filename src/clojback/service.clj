@@ -6,7 +6,26 @@
             [io.pedestal.http.request :as req]
             [io.pedestal.http.body-params :as body-params]
             [ring.util.response :as ring-resp]
+            [clojure.string :as str]
             [clojback.barleydb :as barleydb]))
+
+
+(defn variable-map
+  "Reads the `variables` query parameter, which contains a JSON string
+  for any and all GraphQL variables to be associated with this request.
+  Returns a map of the variables (using keyword keys)."
+  [request]
+  (let [vars (get-in request [:query-params :variables])]
+    (if-not (str/blank? vars)
+      (json/read-str vars :key-fn keyword)
+      {})))
+
+(defn extract-query
+  [request]
+  (case (:request-method request)
+    :get (get-in request [:query-params :query])
+    :post (slurp (:body request))
+    :else ""))
 
 (def graphql-schema (barleydb/get-graphql-schema "scott.data"))
 
@@ -19,13 +38,13 @@
 (defn graph-query
   [request]
   (println (keys request))
-  (let [query-content (get-in request [:query-params :query])]
+      (let [vars (variable-map request)
+            query (extract-query request)]
     (->  graphql-schema
          (.newContext)
-         (.execute query-content)
+         (.execute query)
          (json/write-str)
          (ring-resp/response))))
-
 
 ;; Defines "/" and "/about" routes with their associated :get handlers.
 ;; The interceptors defined after the verb map (e.g., {:get home-page}
@@ -35,7 +54,9 @@
 ;; Tabular routes
 (def routes #{
   ["/graph/schema" :get (conj common-interceptors `graph-sdl)]
-  ["/graph/exec" :get (conj common-interceptors `graph-query)]})
+  ["/graph/exec"   :get (conj common-interceptors `graph-query) :route-name :gql-exec]
+  ["/graph/exec"   :post (conj common-interceptors `graph-query)  :route-name :gql-post]})
+
 
 ;; Map-based routes
 ;(def routes `{"/" {:interceptors [(body-params/body-params) http/html-body]
