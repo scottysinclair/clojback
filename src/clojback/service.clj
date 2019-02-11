@@ -1,32 +1,27 @@
 (ns clojback.service
   (:require [clojure.data.json :as json]
             [io.pedestal.http :as http]
+            [io.pedestal.interceptor :refer [interceptor]]
             [io.pedestal.http.route :as route]
+            [io.pedestal.http.request :as req]
             [io.pedestal.http.body-params :as body-params]
             [ring.util.response :as ring-resp]
             [clojback.barleydb :as barleydb]))
 
-
-(defn about-page
-  [request]
-  (ring-resp/response (format "Clojure %s - served from %s oohhh yeahhh!!!!!!"
-                              (clojure-version)
-                              (route/url-for ::about-page))))
+(def graphql-schema (barleydb/get-graphql-schema "scott.data"))
 
 (defn graph-page
   [request]
-  (->  "scott.data"
-       (barleydb/get-graphql-schema)
-       (.newContext)
-       (.execute "{transactions { id \n date \n amount }}")
-       (json/write-str)
-       (ring-resp/response)))
-  
+  (println (keys request))
+  (println (:query-params request))
 
+  (let [query-content (get-in request [:query-params :query])]
+    (->  graphql-schema
+         (.newContext)
+         (.execute query-content)
+         (json/write-str)
+         (ring-resp/response))))
 
-(defn home-page
-  [request]
-  (ring-resp/response "Hello World!"))
 
 ;; Defines "/" and "/about" routes with their associated :get handlers.
 ;; The interceptors defined after the verb map (e.g., {:get home-page}
@@ -34,10 +29,8 @@
 (def common-interceptors [(body-params/body-params) http/html-body])
 
 ;; Tabular routes
-(def routes #{["/" :get (conj common-interceptors `home-page)]
-              ["/about" :get (conj common-interceptors `about-page)]
-              ["/graph" :get (conj common-interceptors `graph-page)]
-              })
+(def routes #{
+  ["/graph" :get (conj common-interceptors `graph-page)]})
 
 ;; Map-based routes
 ;(def routes `{"/" {:interceptors [(body-params/body-params) http/html-body]
