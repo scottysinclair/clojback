@@ -10,11 +10,15 @@
 
 (def graphql-schema (barleydb/get-graphql-schema "scott.data"))
 
-(defn graph-page
+(defn graph-sdl
+  [request]
+  (-> graphql-schema
+      (.getSdlString)
+      (ring-resp/response)))
+
+(defn graph-query
   [request]
   (println (keys request))
-  (println (:query-params request))
-
   (let [query-content (get-in request [:query-params :query])]
     (->  graphql-schema
          (.newContext)
@@ -30,7 +34,8 @@
 
 ;; Tabular routes
 (def routes #{
-  ["/graph" :get (conj common-interceptors `graph-page)]})
+  ["/graph/schema" :get (conj common-interceptors `graph-sdl)]
+  ["/graph/exec" :get (conj common-interceptors `graph-query)]})
 
 ;; Map-based routes
 ;(def routes `{"/" {:interceptors [(body-params/body-params) http/html-body]
