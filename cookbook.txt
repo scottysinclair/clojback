@@ -3,6 +3,17 @@ clojure general
 def - evaluated once on script load
 defn -evaluated each time it is called
 
+#functions
+defn - name params body - defines a named function
+
+#anonymous functions
+(fn [message] (println message))
+
+#anonymous functions - shorthand
+#(+ 6 %)
+#(+ %1 %2)
+
+
 
 #list - linked list
 (1,2,3)
@@ -24,6 +35,7 @@ http://localhost:8080/about
 
 #reload a namespace in the REPL
 (use 'clojback.service :reload)
+(use 'clojback.barleydb :reload)
 
 
 #lacina graphql parsing SDL file
@@ -41,3 +53,9 @@ clojure Java
 
 #call static method
 (ClassName/methodName arguments)
+
+
+lein
+
+#dependencey tree
+lein deps :tree

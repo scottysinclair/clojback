@@ -1,8 +1,10 @@
 (ns clojback.service
-  (:require [io.pedestal.http :as http]
+  (:require [clojure.data.json :as json]
+            [io.pedestal.http :as http]
             [io.pedestal.http.route :as route]
             [io.pedestal.http.body-params :as body-params]
-            [ring.util.response :as ring-resp]))
+            [ring.util.response :as ring-resp]
+            [clojback.barleydb :as barleydb]))
 
 
 (defn about-page
@@ -10,6 +12,17 @@
   (ring-resp/response (format "Clojure %s - served from %s oohhh yeahhh!!!!!!"
                               (clojure-version)
                               (route/url-for ::about-page))))
+
+(defn graph-page
+  [request]
+  (->  "scott.data"
+       (barleydb/get-graphql-schema)
+       (.newContext)
+       (.execute "{transactions { id \n date \n amount }}")
+       (json/write-str)
+       (ring-resp/response)))
+  
+
 
 (defn home-page
   [request]
@@ -22,7 +35,9 @@
 
 ;; Tabular routes
 (def routes #{["/" :get (conj common-interceptors `home-page)]
-              ["/about" :get (conj common-interceptors `about-page)]})
+              ["/about" :get (conj common-interceptors `about-page)]
+              ["/graph" :get (conj common-interceptors `graph-page)]
+              })
 
 ;; Map-based routes
 ;(def routes `{"/" {:interceptors [(body-params/body-params) http/html-body]

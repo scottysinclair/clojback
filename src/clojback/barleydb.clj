@@ -8,14 +8,23 @@
 	        (.withDriver "org.hsqldb.jdbcDriver")
 	        (.withUser "sa")
 	        (.withPassword "")
-	        (.withUrl "jdbc:hsqldb:mem:testdb;hsqldb.tx=MVCC")
+	        (.withUrl "jdbc:hsqldb:file:database/hsqldb;hsqldb.tx=MVCC")
 	        (.end)
          (.withSequenceGenerator QuickHackSequenceGenerator)
-         (.withSpecs (into-array String [ "resources/etlspec.xml"]))
          (.withNoClasses)
          (.withDroppingSchema false)
-         (.withSchemaCreation true)))
+         (.withSchemaCreation false)
+         (.withSpecs (into-array java.lang.Class [ scott.data.AccountingSpec ]))
+))
 
 (def env (.create env-definition))
+
+(defn get-spec-registry []
+	(.getFullSpecRegistry env-definition))
+
+;	(first (remove #(nil? (.getDefinitionsSpec % namespace)) (-> env-definition (.getAllSpecRegistries)))))
+
+(defn get-graphql-schema [namespace] 
+	(new scott.barleydb.api.graphql.BarleyGraphQLSchema (get-spec-registry) env namespace nil))
 
 

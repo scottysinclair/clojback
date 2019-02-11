@@ -5,6 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [io.pedestal/pedestal.service "0.5.5"]
+                 [org.clojure/data.json        "0.2.6"]
 
                  ;; Remove this line and uncomment one of the next lines to
                  ;; use Immutant or Tomcat instead of Jetty:
@@ -17,11 +18,13 @@
                  [org.slf4j/jcl-over-slf4j "1.7.25"]
                  [org.slf4j/log4j-over-slf4j "1.7.25"]
                  [scott/scott.barleydb "0.0.1-SNAPSHOT"]]
+;;                 [scott/accounting "1.0-SNAPSHOT"]]
   :min-lein-version "2.0.0"
   :resource-paths [
       "config", 
       "resources", 
-      "/home/scott/.m2/repository/scott/scott.barleydb/0.0.1-SNAPSHOT/scott.barleydb-0.0.1-SNAPSHOT.jar",
+;;        "/home/scott/.m2/repository/scott/scott.barleydb/0.0.1-SNAPSHOT/scott.barleydb-0.0.1-SNAPSHOT.jar",
+      "/home/scott/.m2/repository/scott/accounting/1.0-SNAPSHOT/accounting-1.0-SNAPSHOT.jar",
       "/home/scott/.m2/repository/org/hsqldb/hsqldb/2.3.2/hsqldb-2.3.2.jar"]
   ;; If you use HTTP/2 or ALPN, use the java-agent to pull in the correct alpn-boot dependency
   ;:java-agents [[org.mortbay.jetty.alpn/jetty-alpn-agent "2.0.5"]]
