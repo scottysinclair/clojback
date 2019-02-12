@@ -7,7 +7,8 @@
             [io.pedestal.http.body-params :as body-params]
             [ring.util.response :as ring-resp]
             [clojure.string :as str]
-            [clojback.barleydb :as barleydb]))
+            [clojback.barleydb :as barleydb]
+            [clojback.barleydb.custom-queries :as custom-queries]))
 
 
 (defn variable-map
@@ -27,7 +28,10 @@
     :post (slurp (:body request))
     :else ""))
 
-(def graphql-schema (barleydb/get-graphql-schema "scott.data"))
+(defn graphql-schema[] (barleydb/get-graphql-schema "scott.data" (custom-queries/build)))
+(defn new-context[graphql-schema] (.newContext graphql-schema))
+(defn execute [context query] (.execute context query))
+
 
 (defn graph-sdl
   [request]
@@ -40,9 +44,9 @@
   (println (keys request))
       (let [vars (variable-map request)
             query (extract-query request)]
-    (->  graphql-schema
-         (.newContext)
-         (.execute query)
+    (->  (graphql-schema)
+         (new-context)
+         (execute query)
          (json/write-str)
          (ring-resp/response))))
 

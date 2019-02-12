@@ -74,3 +74,32 @@ lein
 
 #dependencey tree
 lein deps :tree
+
+
+--------------------------------------------------------
+
+queries
+
+{
+  transactionsInMonth(fromDate: "01-01-2014", toDate: "10-10-2014") {
+    id
+    date
+    amount
+    category {
+      id
+      name
+    }
+  }
+  
+  categorys {
+    id
+    name
+  }
+  
+  months {
+    id
+    starting
+    startingBalance
+    finished
+  }
+}
