@@ -1,4 +1,5 @@
 clojure general
+------------------------------------------
 
 def - evaluated once on script load
 defn -evaluated each time it is called
@@ -14,7 +15,6 @@ defn - name params body - defines a named function
 #(+ %1 %2)
 
 
-
 #list - linked list
 (1,2,3)
 
@@ -23,20 +23,44 @@ defn - name params body - defines a named function
 
 
 
-clojure pedestal
+clojure Java
+---------------------------------------
 
-#start the REPL
-lein repl
+#import a class
+(import 'hello.Hello)
+
+#call static method
+(ClassName/methodName arguments)
+
+
+
+clojure pedestal
+---------------------------------------------
 
 #start the http server
 (def serv (run-dev))
 
-http://localhost:8080/about
+
+
+REPL
+--------------------------------------------
+#start the REPL
+lein repl
+
+#change namespace 
+(in-ns 'hello.core)
+
+#list contents of namespace
+clojure.repl/dir clojback.service)
 
 #reload a namespace in the REPL
 (use 'clojback.service :reload)
 (use 'clojback.barleydb :reload)
 
+
+
+LACIA
+-------------------------------------------
 
 #lacina graphql parsing SDL file
 https://lacinia.readthedocs.io/en/latest/schema/parsing.html
@@ -44,14 +68,6 @@ https://lacinia.readthedocs.io/en/latest/schema/parsing.html
 #lacia example
 https://github.com/hlship/boardgamegeek-graphql-proxy/tree/master/src/bgg_graphql_proxy
 
-
-clojure Java
-
-#import a class
-(import 'hello.Hello)
-
-#call static method
-(ClassName/methodName arguments)
 
 
 lein
