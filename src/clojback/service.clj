@@ -35,7 +35,7 @@
 
 (defn graph-sdl
   [request]
-  (-> graphql-schema
+  (-> (graphql-schema)
       (.getSdlString)
       (ring-resp/response)))
 

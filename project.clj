@@ -17,7 +17,7 @@
                  [org.slf4j/jul-to-slf4j "1.7.25"]
                  [org.slf4j/jcl-over-slf4j "1.7.25"]
                  [org.slf4j/log4j-over-slf4j "1.7.25"]
-                 [scott/scott.barleydb "0.0.1-SNAPSHOT"]]
+                 [scott/scott.barleydb "1.0.0"]]
 ;;                 [scott/accounting "1.0-SNAPSHOT"]]
   :min-lein-version "2.0.0"
   :resource-paths [
